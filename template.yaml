@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  template
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+# TepmlateAPIの設定
+  TepmlateFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: projects/Template
+      Handler: index.handler
+      Runtime: nodejs20.x
+      Architectures:
+        - x86_64
+    Metadata: 
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: false
+        Target: 'es2020'
+        SourcesContent: false
+        EntryPoints:
+          - src/index.ts
+        External: ["@aws-sdk/*","@aws-lambda-powertools/*"]
+      Environment:
+        Variables:
+          NODE_OPTIONS: --enable-source-maps
+  TepmlateFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Principal: 'apigateway.amazonaws.com'
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt TepmlateFunction.Arn
+      SourceArn: !Sub 'arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGW}/*'
+  TepmlateFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${TepmlateFunction}
+      RetentionInDays: 14
+
+  ApiGW:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: dev
+      StageName: dev
+      ApiKeySourceType: HEADER
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: openapi.yaml
+
+Outputs:
+  TepmlateFunctionArn:
+    Description: 'TepmlateFunction ARN'
+    Value: !GetAtt TepmlateFunction.Arn
+  ApiGwURL:
+    Description: 'API Gateway Endpoint URL'
+    Value: !Sub "https://${ApiGW}.execute-api.${AWS::Region}.localhost.localstack.cloud/dev/"

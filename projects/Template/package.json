@@ -1,0 +1,11 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "type-check": "tsc",
+    "build": "npx esbuild . --outdir=dist --platform=node --target=node22 --bundle --minify --sourcemap=linked --sources-content=false",
+    "zip": "zip -r function.zip dist/*",
+    "clean": "rm -rf dist function.zip"
+  }
+}

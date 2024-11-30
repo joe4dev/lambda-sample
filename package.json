@@ -1,0 +1,45 @@
+{
+  "name": "lambda-sample",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run type-check --workspaces && npm run build --workspaces",
+    "zip": "npm run build && npm run zip --workspaces",
+    "clean": "npm run clean --workspaces",
+    "lint": "eslint  --ignore-path .gitignore .",
+    "lint:updated": "pipe-git-updated --ext=js -- eslint --ignore-path .gitignore",
+    "prettier-check": "prettier -c --ignore-path .gitignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
+    "prettier-check:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier -c",
+    "prettify": "prettier --write --ignore-path .gitignore \"**/*.{css,html,js,json,md,yaml,yml}\"",
+    "prettify:updated": "pipe-git-updated --ext=css --ext=html --ext=js --ext=json --ext=md --ext=yaml --ext=yml -- prettier --write",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@aws-lambda-powertools/logger": "^2.11.0",
+    "@aws-sdk/client-dynamodb": "^3.687.0",
+    "@aws-sdk/lib-dynamodb": "^3.687.0",
+    "@aws-sdk/types": "^3.649.0",
+    "@eslint/js": "^9.10.0",
+    "@serverless/eslint-config": "^5.1.0",
+    "@types/aws-lambda": "^8.10.145",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.7.4",
+    "esbuild": "^0.23.1",
+    "eslint": "^8.57.1",
+    "eslint-config-typescript": "^3.0.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.30.0",
+    "git-list-updated": "^1.2.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.6.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "workspaces": [
+    "projects/*"
+  ]
+}

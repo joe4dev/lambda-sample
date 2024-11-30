@@ -1,0 +1,17 @@
+openapi: '3.0'
+title: ApiGateway-For-Local
+paths:
+  /template:
+    get:
+      x-amazon-apigateway-integration:
+        httpMethod: GET
+        type: aws_proxy
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TepmlateFunction.Arn}/invocations
+
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: x-api-key
+      in: header
